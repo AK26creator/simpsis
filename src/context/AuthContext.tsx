@@ -26,7 +26,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
         // For Admin: Hardcoded check for demo purposes (as per previous flow)
         if (email === 'admin@simpsis.com' && password === 'admin123') {
             const adminUser: Employee = {
-                id: 'admin',
+                id: '00000000-0000-0000-0000-000000000000',
                 full_name: 'Admin User',
                 email: 'admin@simpsis.com',
                 role: 'Admin',
