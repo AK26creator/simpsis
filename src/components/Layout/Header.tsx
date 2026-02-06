@@ -1,15 +1,28 @@
-import { Bell, Search, User } from 'lucide-react';
+import { Bell, Search, User, Menu, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-const Header = () => {
+interface HeaderProps {
+    isSidebarOpen: boolean;
+    toggleSidebar: () => void;
+}
+
+const Header = ({ isSidebarOpen, toggleSidebar }: HeaderProps) => {
     const navigate = useNavigate();
     const { user } = useAuth();
 
     return (
-        <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8 sticky top-0 z-10 ml-64">
-            <div className="flex items-center gap-4 w-96">
-                <div className="relative w-full">
+        <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8 sticky top-0 z-10 w-full">
+            <div className="flex items-center gap-4 flex-1">
+                <button
+                    onClick={toggleSidebar}
+                    className="p-2 -ml-2 text-gray-400 hover:text-primary-600 hover:bg-gray-50 rounded-lg transition-colors"
+                    title={isSidebarOpen ? "Close Sidebar" : "Open Sidebar"}
+                >
+                    {isSidebarOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+                </button>
+
+                <div className="relative max-w-md w-full ml-2">
                     <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
                     <input
                         type="text"
@@ -33,9 +46,13 @@ const Header = () => {
                         <p className="text-sm font-semibold text-gray-700">{user?.full_name || 'Admin User'}</p>
                         <p className="text-xs text-gray-500">{user?.role || 'Super Admin'}</p>
                     </div>
-                    <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 border border-primary-200">
-                        <User className="w-5 h-5" />
-                    </div>
+                    {user?.avatar_url ? (
+                        <img src={user.avatar_url} alt="" className="w-10 h-10 rounded-full border border-gray-200 object-cover" />
+                    ) : (
+                        <div className="w-10 h-10 rounded-full bg-primary-100 flex items-center justify-center text-primary-600 border border-primary-200">
+                            <User className="w-5 h-5" />
+                        </div>
+                    )}
                 </button>
             </div>
         </header>
