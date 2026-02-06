@@ -36,9 +36,15 @@ const SubmitReport = () => {
             return;
         }
 
+        if (!user) {
+            alert('User session not found. Please log in again.');
+            setLoading(false);
+            return;
+        }
+
         setLoading(true);
         try {
-            const { error } = await supabase
+            const { error: submitError } = await supabase
                 .from('reports')
                 .insert([
                     {
@@ -46,12 +52,12 @@ const SubmitReport = () => {
                         type: formData.type,
                         description: formData.description,
                         proof_url: formData.proofUrl || null,
-                        author_id: user?.id,
+                        author_id: user.id,
                         status: 'Pending'
                     }
                 ]);
 
-            if (error) throw error;
+            if (submitError) throw submitError;
 
             setSuccess(true);
             setFormData({ title: '', type: '', description: '', proofUrl: '' });
@@ -59,9 +65,9 @@ const SubmitReport = () => {
             setTimeout(() => {
                 navigate('/app/history');
             }, 2000);
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error submitting report:', error);
-            alert('Failed to submit report. Please try again.');
+            alert('Failed to submit report: ' + (error.message || 'Unknown error'));
         } finally {
             setLoading(false);
         }
