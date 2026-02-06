@@ -1,5 +1,5 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, FileText, UserPlus, LogOut } from 'lucide-react';
+import { LayoutDashboard, Users, FileText, UserPlus, LogOut, Bell } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useAuth } from '../../context/AuthContext';
 
@@ -19,8 +19,10 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
     const navItems = [
         { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
         { icon: FileText, label: 'View Reports', path: '/admin/reports' },
+        { icon: FileText, label: 'Manage Leave', path: '/admin/leave' },
         { icon: Users, label: 'Manage Users', path: '/admin/users' },
         { icon: UserPlus, label: 'Create User', path: '/admin/users/create' },
+        { icon: Bell, label: 'Announcements', path: '/admin/announcements' },
     ];
 
     return (

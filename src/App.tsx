@@ -9,6 +9,8 @@ import Reports from './pages/Reports';
 import UserList from './pages/Users/UserList';
 import CreateUser from './pages/Users/CreateUser';
 import AdminProfile from './pages/Admin/AdminProfile';
+import Announcements from './pages/Admin/Announcements';
+import LeaveManagement from './pages/Admin/LeaveManagement';
 
 import EmployeeDashboard from './pages/Employee/Dashboard';
 import DepartmentFeed from './pages/Employee/DepartmentFeed';
@@ -27,9 +29,11 @@ function App() {
           <Route path="/admin" element={<AdminLayout />}>
             <Route index element={<Dashboard />} />
             <Route path="reports" element={<Reports />} />
+            <Route path="leave" element={<LeaveManagement />} />
             <Route path="users" element={<UserList />} />
             <Route path="users/create" element={<CreateUser />} />
             <Route path="profile" element={<AdminProfile />} />
+            <Route path="announcements" element={<Announcements />} />
           </Route>
 
           <Route path="/app" element={<EmployeeLayout />}>

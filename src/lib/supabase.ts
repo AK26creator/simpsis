@@ -48,3 +48,23 @@ export type LeaveRequest = {
     created_at: string;
     updated_at: string;
 }
+
+export type Announcement = {
+    id: string;
+    title: string;
+    content: string;
+    created_by: string;
+    type: string;
+    created_at: string;
+}
+
+export type Notification = {
+    id: string;
+    user_id: string;
+    title: string;
+    message: string;
+    type: 'Announcement' | 'ReportStatus' | 'LeaveRequest' | 'General';
+    read: boolean;
+    link?: string;
+    created_at: string;
+}

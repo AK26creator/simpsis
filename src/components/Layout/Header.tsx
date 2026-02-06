@@ -1,6 +1,8 @@
 import { Bell, Search, User, Menu, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
+import { useState } from 'react';
+import NotificationPanel from '../Notifications/NotificationPanel';
 
 interface HeaderProps {
     isSidebarOpen: boolean;
@@ -10,9 +12,10 @@ interface HeaderProps {
 const Header = ({ isSidebarOpen, toggleSidebar }: HeaderProps) => {
     const navigate = useNavigate();
     const { user } = useAuth();
+    const [notifOpen, setNotifOpen] = useState(false);
 
     return (
-        <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8 sticky top-0 z-10 w-full">
+        <header className="bg-white border-b border-gray-200 h-16 flex items-center justify-between px-8 sticky top-0 z-30 w-full">
             <div className="flex items-center gap-4 flex-1">
                 <button
                     onClick={toggleSidebar}
@@ -33,10 +36,16 @@ const Header = ({ isSidebarOpen, toggleSidebar }: HeaderProps) => {
             </div>
 
             <div className="flex items-center gap-4">
-                <button className="relative p-2 text-gray-400 hover:text-primary-600 transition-colors">
-                    <Bell className="w-5 h-5" />
-                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
-                </button>
+                <div className="relative">
+                    <button
+                        onClick={() => setNotifOpen(!notifOpen)}
+                        className="relative p-2 text-gray-400 hover:text-primary-600 hover:bg-gray-50 rounded-lg transition-colors"
+                    >
+                        <Bell className="w-5 h-5" />
+                        <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                    </button>
+                    <NotificationPanel isOpen={notifOpen} onClose={() => setNotifOpen(false)} />
+                </div>
 
                 <button
                     onClick={() => navigate('/admin/profile')}

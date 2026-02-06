@@ -1,13 +1,15 @@
 import { Outlet, NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, FileText, History, User, LogOut, Menu, X } from 'lucide-react';
+import { LayoutDashboard, FileText, History, User, LogOut, Menu, X, Bell } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useAuth } from '../../context/AuthContext';
 import { useState } from 'react';
+import NotificationPanel from '../Notifications/NotificationPanel';
 
 const EmployeeLayout = () => {
     const navigate = useNavigate();
     const { user, logout, isAdmin } = useAuth();
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const [notifOpen, setNotifOpen] = useState(false);
 
     // Redirect admins away from employee portal
     if (isAdmin) {
@@ -36,7 +38,7 @@ const EmployeeLayout = () => {
                 <div className="max-w-7xl mx-auto px-4 sm:px-6">
                     <div className="flex items-center justify-between h-16">
                         <div className="flex items-center gap-4 sm:gap-8">
-                            <h1 className="text-lg sm:text-xl font-bold text-primary-600">SIMPSIS</h1>
+                            <h1 className="text-lg sm:text-xl font-bold text-primary-600 cursor-pointer" onClick={() => navigate('/app')}>SIMPSIS</h1>
 
                             <nav className="hidden lg:flex items-center gap-1">
                                 {navItems.map((item) => (
@@ -61,7 +63,19 @@ const EmployeeLayout = () => {
                         </div>
 
                         <div className="flex items-center gap-2 sm:gap-4">
-                            <div className="flex items-center gap-3 mr-2 sm:mr-4">
+                            {/* Notification Bell */}
+                            <div className="relative">
+                                <button
+                                    onClick={() => setNotifOpen(!notifOpen)}
+                                    className="p-2 text-gray-400 hover:text-primary-600 hover:bg-gray-50 rounded-lg transition-colors relative"
+                                >
+                                    <Bell className="w-5 h-5" />
+                                    <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-red-500 rounded-full border-2 border-white"></span>
+                                </button>
+                                <NotificationPanel isOpen={notifOpen} onClose={() => setNotifOpen(false)} />
+                            </div>
+
+                            <div className="flex items-center gap-3 mr-2 sm:mr-4 pl-4 border-l border-gray-100">
                                 {user?.avatar_url ? (
                                     <img src={user.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover border border-gray-200" />
                                 ) : (
