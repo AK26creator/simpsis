@@ -76,9 +76,9 @@ const Announcements = () => {
             setAnnouncements([newAnnouncement, ...announcements]);
             setShowModal(false);
             setFormData({ title: '', content: '', type: 'General' });
-        } catch (error) {
+        } catch (error: any) {
             console.error('Error creating announcement:', error);
-            alert('Failed to create announcement');
+            alert(`Failed to create announcement: ${error.message || 'Unknown error'}`);
         } finally {
             setIsSubmitting(false);
         }

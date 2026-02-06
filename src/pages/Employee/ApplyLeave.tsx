@@ -44,16 +44,21 @@ const ApplyLeave = () => {
 
         setLoading(true);
         try {
-            // Find team leader from the same department
-            const { data: teamLeader, error: tlError } = await supabase
-                .from('employees')
-                .select('id')
-                .eq('department', user?.department)
-                .eq('is_team_leader', true)
-                .single();
+            let approverId = null;
 
-            if (tlError && tlError.code !== 'PGRST116') {
-                console.error('Error finding team leader:', tlError);
+            // Only seek department TL if the requester is NOT a Team Leader themselves
+            if (!user?.is_team_leader) {
+                const { data: teamLeader, error: tlError } = await supabase
+                    .from('employees')
+                    .select('id')
+                    .eq('department', user?.department)
+                    .eq('is_team_leader', true)
+                    .single();
+
+                if (tlError && tlError.code !== 'PGRST116') {
+                    console.error('Error finding team leader:', tlError);
+                }
+                approverId = teamLeader?.id || null;
             }
 
             const { error } = await supabase
@@ -65,7 +70,7 @@ const ApplyLeave = () => {
                         start_date: formData.startDate,
                         end_date: formData.endDate,
                         reason: formData.reason,
-                        approver_id: teamLeader?.id || null,
+                        approver_id: approverId,
                         status: 'Pending'
                     }
                 ]);
@@ -94,7 +99,7 @@ const ApplyLeave = () => {
                         <CheckCircle className="w-8 h-8 text-green-600" />
                     </div>
                     <h2 className="text-2xl font-bold text-gray-800 mb-2">Leave Request Submitted!</h2>
-                    <p className="text-gray-600 mb-4">Your leave request has been sent to your team leader for approval.</p>
+                    <p className="text-gray-600 mb-4">Your leave request has been sent to the {user?.is_team_leader ? 'Admin' : 'Team Leader'} for approval.</p>
                     <p className="text-sm text-gray-500">Redirecting to dashboard...</p>
                 </div>
             </div>
@@ -105,7 +110,7 @@ const ApplyLeave = () => {
         <div className="max-w-3xl mx-auto">
             <div className="mb-6">
                 <h2 className="text-2xl font-bold text-gray-800">Apply for Leave</h2>
-                <p className="text-gray-500 mt-1">Submit a leave request to your team leader</p>
+                <p className="text-gray-500 mt-1">Submit a leave request to the {user?.is_team_leader ? 'Admin' : 'Team Leader'}</p>
             </div>
 
             <form onSubmit={handleSubmit} className="bg-white rounded-xl border border-gray-200 p-4 sm:p-6 space-y-6">
@@ -177,7 +182,7 @@ const ApplyLeave = () => {
                     <AlertCircle className="w-5 h-5 text-blue-600 mt-0.5 flex-shrink-0" />
                     <div className="text-sm text-blue-800">
                         <p className="font-medium">Approval Process</p>
-                        <p className="text-blue-700 mt-1">Your leave request will be sent to your department team leader for approval.</p>
+                        <p className="text-blue-700 mt-1">Your leave request will be sent to the {user?.is_team_leader ? 'Admin' : 'department Team Leader'} for approval.</p>
                     </div>
                 </div>
 
