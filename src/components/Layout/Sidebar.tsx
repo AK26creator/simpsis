@@ -1,13 +1,14 @@
 import { NavLink, useNavigate } from 'react-router-dom';
-import { LayoutDashboard, Users, FileText, UserPlus, LogOut, Bell } from 'lucide-react';
+import { LayoutDashboard, Users, FileText, UserPlus, LogOut, Bell, X } from 'lucide-react';
 import { clsx } from 'clsx';
 import { useAuth } from '../../context/AuthContext';
 
 interface SidebarProps {
     isOpen: boolean;
+    onClose?: () => void;
 }
 
-const Sidebar = ({ isOpen }: SidebarProps) => {
+const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
     const navigate = useNavigate();
     const { logout } = useAuth();
 
@@ -27,11 +28,19 @@ const Sidebar = ({ isOpen }: SidebarProps) => {
 
     return (
         <aside className={clsx(
-            "fixed left-0 top-0 h-screen bg-white border-r border-gray-200 transition-all duration-300 z-20 flex flex-col",
+            "fixed left-0 top-0 h-screen bg-white border-r border-gray-200 transition-all duration-300 z-50 flex flex-col",
             isOpen ? "w-64 translate-x-0" : "w-64 -translate-x-full"
         )}>
             <div className="p-6 border-b border-gray-100 flex items-center justify-between">
                 <h1 className="text-xl font-bold text-primary-600 truncate">SIMPSIS Admin</h1>
+                {onClose && (
+                    <button
+                        onClick={onClose}
+                        className="p-2 -mr-2 text-gray-400 hover:text-primary-600 lg:hidden"
+                    >
+                        <X className="w-6 h-6" />
+                    </button>
+                )}
             </div>
 
             <nav className="flex-1 p-4 space-y-2 overflow-y-auto">

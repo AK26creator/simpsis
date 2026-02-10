@@ -5,22 +5,22 @@ import { supabase, type Employee, type Report } from '../lib/supabase';
 import { useNavigate } from 'react-router-dom';
 
 const StatCard = ({ icon: Icon, label, value, color, loading }: any) => (
-    <div className="bg-white p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all">
+    <div className="bg-white p-4 sm:p-6 rounded-xl border border-gray-100 shadow-sm hover:shadow-md transition-all">
         <div className="flex items-start justify-between">
             <div>
-                <p className="text-gray-500 text-sm font-medium">{label}</p>
-                <h3 className="text-2xl font-bold text-gray-900 mt-2">
+                <p className="text-gray-500 text-xs sm:text-sm font-medium">{label}</p>
+                <h3 className="text-xl sm:text-2xl font-bold text-gray-900 mt-1 sm:mt-2">
                     {loading ? (
-                        <div className="h-8 w-16 bg-gray-100 animate-pulse rounded"></div>
+                        <div className="h-6 sm:h-8 w-12 sm:w-16 bg-gray-100 animate-pulse rounded"></div>
                     ) : value}
                 </h3>
             </div>
-            <div className={clsx('p-3 rounded-lg', color)}>
-                <Icon className="w-6 h-6 text-white" />
+            <div className={clsx('p-2 sm:p-3 rounded-lg', color)}>
+                <Icon className="w-5 h-5 sm:w-6 sm:h-6 text-white" />
             </div>
         </div>
-        <div className="mt-4 flex items-center text-sm">
-            <TrendingUp className="w-4 h-4 text-green-500 mr-1" />
+        <div className="mt-4 flex items-center text-xs sm:text-sm">
+            <TrendingUp className="w-3 h-3 sm:w-4 sm:h-4 text-green-500 mr-1" />
             <span className="text-green-600 font-medium">Live Data</span>
         </div>
     </div>
@@ -96,11 +96,11 @@ const Dashboard = () => {
     ];
 
     return (
-        <div className="space-y-6">
+        <div className="space-y-4 sm:space-y-6">
             <div className="flex items-center justify-between">
                 <div>
-                    <h2 className="text-2xl font-bold text-gray-800">Dashboard Overview</h2>
-                    <p className="text-gray-500 mt-1">Welcome back, Admin. Here's what's happening today.</p>
+                    <h2 className="text-xl sm:text-2xl font-bold text-gray-800">Dashboard Overview</h2>
+                    <p className="text-xs sm:text-sm text-gray-500 mt-1">Welcome back, Admin.</p>
                 </div>
                 <button
                     onClick={fetchDashboardData}
@@ -110,7 +110,7 @@ const Dashboard = () => {
                 </button>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
                 {statCards.map((stat, index) => (
                     <StatCard key={index} {...stat} loading={loading} />
                 ))}
