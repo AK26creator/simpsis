@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { Plus, Search, MoreVertical, Shield } from 'lucide-react';
+import { Plus, Search, MoreVertical, Shield, Edit2, Trash2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { supabase, type Employee } from '../../lib/supabase';
 
@@ -29,7 +29,30 @@ const UserList = () => {
         }
     };
 
-    const filteredUsers = users.filter(user =>
+    const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+
+    const handleDeleteUser = async (id: string, name: string) => {
+        if (!window.confirm(`Are you sure you want to delete ${name}? This action cannot be undone.`)) {
+            return;
+        }
+
+        try {
+            const { error } = await supabase
+                .from('employees')
+                .delete()
+                .eq('id', id);
+
+            if (error) throw error;
+
+            setUsers((prev: Employee[]) => prev.filter((u: Employee) => u.id !== id));
+            alert('User deleted successfully');
+        } catch (error) {
+            console.error('Error deleting user:', error);
+            alert('Failed to delete user');
+        }
+    };
+
+    const filteredUsers = users.filter((user: Employee) =>
         user.full_name.toLowerCase().includes(search.toLowerCase()) ||
         user.email.toLowerCase().includes(search.toLowerCase())
     );
@@ -50,7 +73,7 @@ const UserList = () => {
                 </button>
             </div>
 
-            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
+            <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden min-h-[400px]">
                 <div className="p-4 border-b border-gray-100 flex flex-col sm:flex-row gap-4 justify-between">
                     <div className="relative max-w-md w-full">
                         <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400" />
@@ -81,7 +104,7 @@ const UserList = () => {
                             ) : filteredUsers.length === 0 ? (
                                 <tr><td colSpan={5} className="px-6 py-8 text-center text-gray-500">No users found.</td></tr>
                             ) : (
-                                filteredUsers.map((user) => (
+                                filteredUsers.map((user: Employee) => (
                                     <tr key={user.id} className="hover:bg-gray-50 transition-colors group">
                                         <td className="px-4 sm:px-6 py-3 sm:py-4">
                                             <div className="flex items-center gap-2 sm:gap-3">
@@ -112,9 +135,45 @@ const UserList = () => {
                                             {user.department}
                                         </td>
                                         <td className="px-4 sm:px-6 py-3 sm:py-4 text-right">
-                                            <button className="p-2 text-gray-400 hover:text-primary-600 hover:bg-gray-100 rounded-full transition-colors opacity-100 sm:opacity-0 sm:group-hover:opacity-100">
-                                                <MoreVertical className="w-4 h-4 sm:w-5 h-5" />
-                                            </button>
+                                            <div className="relative inline-block text-left">
+                                                <button
+                                                    onClick={() => setActiveDropdown(activeDropdown === user.id ? null : user.id)}
+                                                    className="p-2 text-gray-400 hover:text-primary-600 hover:bg-gray-100 rounded-full transition-colors"
+                                                >
+                                                    <MoreVertical className="w-4 h-4 sm:w-5 h-5" />
+                                                </button>
+
+                                                {activeDropdown === user.id && (
+                                                    <>
+                                                        <div
+                                                            className="fixed inset-0 z-10"
+                                                            onClick={() => setActiveDropdown(null)}
+                                                        />
+                                                        <div className="absolute right-0 mt-2 w-48 rounded-lg bg-white shadow-xl border border-gray-100 py-1 z-20 overflow-hidden ring-1 ring-black ring-opacity-5 focus:outline-none">
+                                                            <button
+                                                                onClick={() => {
+                                                                    navigate(`/admin/users/edit/${user.id}`);
+                                                                    setActiveDropdown(null);
+                                                                }}
+                                                                className="flex items-center gap-2 w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+                                                            >
+                                                                <Edit2 className="w-4 h-4 text-gray-400" />
+                                                                Edit User
+                                                            </button>
+                                                            <button
+                                                                onClick={() => {
+                                                                    handleDeleteUser(user.id, user.full_name);
+                                                                    setActiveDropdown(null);
+                                                                }}
+                                                                className="flex items-center gap-2 w-full px-4 py-2 text-sm text-red-600 hover:bg-red-50 transition-colors"
+                                                            >
+                                                                <Trash2 className="w-4 h-4 text-red-400" />
+                                                                Delete User
+                                                            </button>
+                                                        </div>
+                                                    </>
+                                                )}
+                                            </div>
                                         </td>
                                     </tr>
                                 ))

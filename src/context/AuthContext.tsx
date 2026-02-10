@@ -16,7 +16,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     useEffect(() => {
         // Check local storage on mount
-        const storedUser = localStorage.getItem('simpsis_user');
+        const storedUser = localStorage.getItem('synopgen_user');
         if (storedUser) {
             setUser(JSON.parse(storedUser));
         }
@@ -24,11 +24,11 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const login = async (email: string, password: string) => {
         // For Admin: Hardcoded check for demo purposes (as per previous flow)
-        if (email === 'admin@simpsis.com' && password === 'admin123') {
+        if (email === 'admin@synopgen.com' && password === 'admin123') {
             const adminUser: Employee = {
                 id: '00000000-0000-0000-0000-000000000000',
                 full_name: 'Admin User',
-                email: 'admin@simpsis.com',
+                email: 'admin@synopgen.com',
                 role: 'Admin',
                 department: 'Management',
                 is_admin: true,
@@ -36,7 +36,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
                 created_at: new Date().toISOString()
             };
             setUser(adminUser);
-            localStorage.setItem('simpsis_user', JSON.stringify(adminUser));
+            localStorage.setItem('synopgen_user', JSON.stringify(adminUser));
             return { success: true };
         }
 
@@ -59,7 +59,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             }
 
             setUser(data);
-            localStorage.setItem('simpsis_user', JSON.stringify(data));
+            localStorage.setItem('synopgen_user', JSON.stringify(data));
             return { success: true };
         } catch (err) {
             console.error('Login error:', err);
@@ -69,14 +69,14 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
     const logout = () => {
         setUser(null);
-        localStorage.removeItem('simpsis_user');
+        localStorage.removeItem('synopgen_user');
     };
 
     const updateUser = (updates: Partial<Employee>) => {
         if (!user) return;
         const updatedUser = { ...user, ...updates };
         setUser(updatedUser);
-        localStorage.setItem('simpsis_user', JSON.stringify(updatedUser));
+        localStorage.setItem('synopgen_user', JSON.stringify(updatedUser));
     };
 
     const isAdmin = user?.is_admin === true || user?.role === 'Admin';

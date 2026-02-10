@@ -25,23 +25,23 @@ const DepartmentFeed = () => {
         if (!user) return;
 
         try {
+            setLoading(true);
             let query = supabase
                 .from('reports')
-                .select('*')
+                .select(`
+                    *,
+                    author:employees!inner(id, full_name, avatar_url, department)
+                `)
                 .order('created_at', { ascending: false });
 
-            // If user is not admin, filter by department
+            // If user is not admin, filter by department using the joined author table
             if (!isAdmin) {
-                // Get all employees from the same department
-                const { data: departmentEmployees, error: empError } = await supabase
-                    .from('employees')
-                    .select('id')
-                    .eq('department', user.department);
-
-                if (empError) throw empError;
-
-                const employeeIds = departmentEmployees?.map(emp => emp.id) || [];
-                query = query.in('author_id', employeeIds);
+                if (!user.department) {
+                    console.warn('User department not found, showing no reports');
+                    setReports([]);
+                    return;
+                }
+                query = query.eq('author.department', user.department);
             }
 
             const { data, error } = await query;
@@ -147,27 +147,42 @@ const DepartmentFeed = () => {
                 </div>
             ) : (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    {filteredReports.map((report) => (
+                    {filteredReports.map((report: any) => (
                         <div key={report.id} className="bg-white rounded-xl border border-gray-200 hover:shadow-lg transition-shadow p-6 space-y-4">
+                            {/* Author Info */}
+                            <div className="flex items-center gap-3 mb-2">
+                                {report.author?.avatar_url ? (
+                                    <img src={report.author.avatar_url} alt="" className="w-8 h-8 rounded-full object-cover border border-gray-100" />
+                                ) : (
+                                    <div className="w-8 h-8 rounded-full bg-primary-100 flex items-center justify-center text-primary-700 text-xs font-bold border border-primary-200">
+                                        {report.author?.full_name?.charAt(0)}
+                                    </div>
+                                )}
+                                <div>
+                                    <p className="text-sm font-bold text-gray-800">{report.author?.full_name}</p>
+                                    <p className="text-[10px] text-gray-500">{report.author?.department}</p>
+                                </div>
+                            </div>
+
                             {/* Header */}
                             <div className="flex items-start justify-between">
                                 <div className="flex-1">
                                     <h3 className="font-semibold text-gray-800 line-clamp-2">{report.title}</h3>
-                                    <p className="text-xs text-gray-500 mt-1">{report.type}</p>
+                                    <p className="text-[10px] sm:text-xs text-gray-500 mt-1 uppercase tracking-wider font-medium">{report.type}</p>
                                 </div>
-                                <span className={`px-2 py-1 text-xs font-medium rounded-full border ${getStatusColor(report.status)}`}>
+                                <span className={`px-2 py-0.5 text-[10px] font-bold rounded-full border uppercase tracking-tighter ${getStatusColor(report.status)}`}>
                                     {report.status}
                                 </span>
                             </div>
 
                             {/* Description */}
                             {report.description && (
-                                <p className="text-sm text-gray-600 line-clamp-3">{report.description}</p>
+                                <p className="text-sm text-gray-600 line-clamp-3 leading-relaxed">{report.description}</p>
                             )}
 
                             {/* Footer */}
                             <div className="flex items-center justify-between pt-3 border-t border-gray-100">
-                                <div className="flex items-center gap-2 text-xs text-gray-500">
+                                <div className="flex items-center gap-2 text-[10px] text-gray-400 font-medium">
                                     <Calendar className="w-3.5 h-3.5" />
                                     {new Date(report.created_at).toLocaleDateString()}
                                 </div>

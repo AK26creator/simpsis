@@ -8,6 +8,7 @@ import Dashboard from './pages/Dashboard';
 import Reports from './pages/Reports';
 import UserList from './pages/Users/UserList';
 import CreateUser from './pages/Users/CreateUser';
+import EditUser from './pages/Users/EditUser';
 import AdminProfile from './pages/Admin/AdminProfile';
 import Announcements from './pages/Admin/Announcements';
 import LeaveManagement from './pages/Admin/LeaveManagement';
@@ -32,6 +33,7 @@ function App() {
             <Route path="leave" element={<LeaveManagement />} />
             <Route path="users" element={<UserList />} />
             <Route path="users/create" element={<CreateUser />} />
+            <Route path="users/edit/:id" element={<EditUser />} />
             <Route path="profile" element={<AdminProfile />} />
             <Route path="announcements" element={<Announcements />} />
           </Route>

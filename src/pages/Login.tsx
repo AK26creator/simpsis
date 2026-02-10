@@ -22,7 +22,7 @@ const Login = () => {
             // Check role to redirect appropriately
             // Does not create a race condition because login updates state synchronously enough for this check 
             // or we can just check the email/logic again here for redirection
-            if (email === 'admin@simpsis.com') {
+            if (email === 'admin@synopgen.com') {
                 navigate('/admin');
             } else {
                 navigate('/app');
@@ -37,7 +37,7 @@ const Login = () => {
         <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
             <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 space-y-8">
                 <div className="text-center">
-                    <h1 className="text-3xl font-bold text-primary-600">SIMPSIS</h1>
+                    <h1 className="text-3xl font-bold text-primary-600">SynopGen</h1>
                     <p className="text-gray-500 mt-2">Welcome back! Please login to your account.</p>
                 </div>
 
@@ -58,7 +58,7 @@ const Login = () => {
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
                                     className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow"
-                                    placeholder="name@simpsis.com"
+                                    placeholder="name@synopgen.com"
                                     required
                                 />
                             </div>
@@ -89,9 +89,6 @@ const Login = () => {
                     </button>
                 </form>
 
-                <div className="text-center text-sm text-gray-500">
-                    <p>Admin Login: admin@simpsis.com / admin123</p>
-                </div>
             </div>
         </div>
     );

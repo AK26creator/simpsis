@@ -32,7 +32,7 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
             isOpen ? "w-64 translate-x-0" : "w-64 -translate-x-full"
         )}>
             <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-                <h1 className="text-xl font-bold text-primary-600 truncate">SIMPSIS Admin</h1>
+                <h1 className="text-xl font-bold text-primary-600 truncate">SynopGen Admin</h1>
                 {onClose && (
                     <button
                         onClick={onClose}
