@@ -28,15 +28,15 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
 
     return (
         <aside className={clsx(
-            "fixed left-0 top-0 h-screen bg-white border-r border-gray-200 transition-all duration-300 z-50 flex flex-col",
+            "fixed left-0 top-0 h-screen bg-brand-dark border-r border-brand-bright/20 transition-all duration-300 z-50 flex flex-col",
             isOpen ? "w-64 translate-x-0" : "w-64 -translate-x-full"
         )}>
-            <div className="p-6 border-b border-gray-100 flex items-center justify-between">
-                <h1 className="text-xl font-bold text-primary-600 truncate">SynopGen Admin</h1>
+            <div className="p-6 border-b border-white/10 flex items-center justify-between">
+                <h1 className="text-xl font-bold text-white truncate">SynopGen Admin</h1>
                 {onClose && (
                     <button
                         onClick={onClose}
-                        className="p-2 -mr-2 text-gray-400 hover:text-primary-600 lg:hidden"
+                        className="p-2 -mr-2 text-gray-400 hover:text-brand-cyan lg:hidden"
                     >
                         <X className="w-6 h-6" />
                     </button>
@@ -52,8 +52,8 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                             clsx(
                                 'flex items-center gap-3 px-4 py-3 rounded-lg transition-colors font-medium whitespace-nowrap',
                                 isActive
-                                    ? 'bg-primary-50 text-primary-700'
-                                    : 'text-gray-600 hover:bg-gray-50 hover:text-primary-600'
+                                    ? 'bg-brand-primary text-white shadow-lg shadow-brand-primary/30'
+                                    : 'text-gray-400 hover:bg-white/5 hover:text-white'
                             )
                         }
                     >
@@ -63,10 +63,10 @@ const Sidebar = ({ isOpen, onClose }: SidebarProps) => {
                 ))}
             </nav>
 
-            <div className="p-4 border-t border-gray-100">
+            <div className="p-4 border-t border-white/10">
                 <button
                     onClick={handleLogout}
-                    className="flex items-center gap-3 px-4 py-3 w-full text-red-600 hover:bg-red-50 rounded-lg transition-colors font-medium whitespace-nowrap"
+                    className="flex items-center gap-3 px-4 py-3 w-full text-brand-light hover:bg-white/5 rounded-lg transition-colors font-medium whitespace-nowrap"
                 >
                     <LogOut className="w-5 h-5 flex-shrink-0" />
                     <span>Logout</span>

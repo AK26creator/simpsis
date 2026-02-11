@@ -3,7 +3,7 @@ import { supabase, type Employee } from '../lib/supabase';
 
 type AuthContextType = {
     user: Employee | null;
-    login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
+    login: (email: string, password: string) => Promise<{ success: boolean; user?: Employee; error?: string }>;
     logout: () => void;
     updateUser: (updates: Partial<Employee>) => void;
     isAdmin: boolean;
@@ -37,7 +37,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
             };
             setUser(adminUser);
             localStorage.setItem('synopgen_user', JSON.stringify(adminUser));
-            return { success: true };
+            return { success: true, user: adminUser };
         }
 
         // For Employees: Check against database
@@ -60,7 +60,7 @@ export const AuthProvider = ({ children }: { children: React.ReactNode }) => {
 
             setUser(data);
             localStorage.setItem('synopgen_user', JSON.stringify(data));
-            return { success: true };
+            return { success: true, user: data as Employee };
         } catch (err) {
             console.error('Login error:', err);
             return { success: false, error: 'An unexpected error occurred' };

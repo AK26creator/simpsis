@@ -16,13 +16,11 @@ const Login = () => {
         setLoading(true);
         setError('');
 
-        const { success, error: authError } = await login(email, password);
+        const { success, user: loggedInUser, error: authError } = await login(email, password);
 
-        if (success) {
+        if (success && loggedInUser) {
             // Check role to redirect appropriately
-            // Does not create a race condition because login updates state synchronously enough for this check 
-            // or we can just check the email/logic again here for redirection
-            if (email === 'admin@synopgen.com') {
+            if (loggedInUser.is_admin || loggedInUser.role === 'Admin') {
                 navigate('/admin');
             } else {
                 navigate('/app');
@@ -34,10 +32,10 @@ const Login = () => {
     };
 
     return (
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center p-4">
-            <div className="max-w-md w-full bg-white rounded-2xl shadow-xl p-8 space-y-8">
+        <div className="min-h-screen bg-brand-dark flex items-center justify-center p-4">
+            <div className="max-w-md w-full bg-white rounded-2xl shadow-2xl p-8 space-y-8 border border-white/5">
                 <div className="text-center">
-                    <h1 className="text-3xl font-bold text-primary-600">SynopGen</h1>
+                    <h1 className="text-3xl font-bold text-brand-dark">SynopGen</h1>
                     <p className="text-gray-500 mt-2">Welcome back! Please login to your account.</p>
                 </div>
 
@@ -57,7 +55,7 @@ const Login = () => {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow"
+                                    className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-shadow"
                                     placeholder="name@synopgen.com"
                                     required
                                 />
@@ -72,7 +70,7 @@ const Login = () => {
                                     type="password"
                                     value={password}
                                     onChange={(e) => setPassword(e.target.value)}
-                                    className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent transition-shadow"
+                                    className="w-full pl-10 pr-4 py-2.5 rounded-lg border border-gray-300 focus:outline-none focus:ring-2 focus:ring-brand-primary focus:border-transparent transition-shadow"
                                     placeholder="••••••••"
                                     required
                                 />
@@ -83,7 +81,7 @@ const Login = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-primary-600 text-white font-semibold py-2.5 rounded-lg hover:bg-primary-700 transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary-500 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="w-full bg-brand-primary text-white font-semibold py-2.5 rounded-lg hover:bg-brand-bright transition-all shadow-lg shadow-brand-primary/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
                     >
                         {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Login'}
                     </button>
