@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '../../context/AuthContext';
 import { supabase, type Report } from '../../lib/supabase';
 import { Filter, Search, Eye, Calendar } from 'lucide-react';
+import ReportDetailsModal from '../../components/Reports/ReportDetailsModal';
 
 const DepartmentFeed = () => {
     const { user, isAdmin } = useAuth();
@@ -10,6 +11,7 @@ const DepartmentFeed = () => {
     const [loading, setLoading] = useState(true);
     const [searchTerm, setSearchTerm] = useState('');
     const [typeFilter, setTypeFilter] = useState('All');
+    const [selectedReport, setSelectedReport] = useState<any | null>(null);
 
     useEffect(() => {
         if (user) {
@@ -187,6 +189,7 @@ const DepartmentFeed = () => {
                                     {new Date(report.created_at).toLocaleDateString()}
                                 </div>
                                 <button
+                                    onClick={() => setSelectedReport(report)}
                                     title="View Details"
                                     className="p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-primary-600 transition-colors"
                                 >
@@ -211,6 +214,14 @@ const DepartmentFeed = () => {
                         </button>
                     )}
                 </div>
+            )}
+
+            {/* Report Details Modal */}
+            {selectedReport && (
+                <ReportDetailsModal
+                    report={selectedReport}
+                    onClose={() => setSelectedReport(null)}
+                />
             )}
         </div>
     );
