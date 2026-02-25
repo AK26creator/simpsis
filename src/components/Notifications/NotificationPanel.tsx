@@ -1,13 +1,12 @@
 import { useEffect, useState } from 'react';
 import { Bell, Trash2, X } from 'lucide-react';
 import { supabase, type Notification } from '../../lib/supabase';
-import { useAuth } from '../../context/AuthContext';
+import { $user } from '../../stores/authStore';
+import { useStore } from '@nanostores/react';
 import { clsx } from 'clsx';
-import { useNavigate } from 'react-router-dom';
 
 const NotificationPanel = ({ isOpen, onClose }: { isOpen: boolean; onClose: () => void }) => {
-    const { user } = useAuth();
-    const navigate = useNavigate();
+    const user = useStore($user);
     const [notifications, setNotifications] = useState<Notification[]>([]);
     const [loading, setLoading] = useState(true);
 
@@ -90,7 +89,7 @@ const NotificationPanel = ({ isOpen, onClose }: { isOpen: boolean; onClose: () =
     const handleNotificationClick = (notification: Notification) => {
         markAsRead(notification.id);
         if (notification.link) {
-            navigate(notification.link);
+            window.location.href = notification.link;
             onClose();
         }
     };

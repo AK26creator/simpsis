@@ -1,0 +1,14 @@
+---
+import AdminLayout from '../../../../layouts/AdminLayout.astro';
+import EditUser from '../../../../components/Users/EditUser';
+
+const { id } = Astro.params;
+
+if (!id) {
+  return Astro.redirect('/admin/users');
+}
+---
+
+<AdminLayout title="Edit User - SIMPSIS">
+  <EditUser id={id} client:load />
+</AdminLayout>

@@ -1,15 +1,13 @@
 import { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '../context/AuthContext';
 import { Lock, Mail, Loader2 } from 'lucide-react';
+import RippleEffect from '../components/Layout/RippleEffect';
+import { login } from '../stores/authStore';
 
-const Login = () => {
+const LoginForm = () => {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
-    const { login } = useAuth();
-    const navigate = useNavigate();
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -19,11 +17,13 @@ const Login = () => {
         const { success, user: loggedInUser, error: authError } = await login(email, password);
 
         if (success && loggedInUser) {
-            // Check role to redirect appropriately
+            // Set cookie for middleware
+            document.cookie = `synopgen_user=${JSON.stringify(loggedInUser)}; path=/; max-age=86400`;
+
             if (loggedInUser.is_admin || loggedInUser.role === 'Admin') {
-                navigate('/admin');
+                window.location.href = '/admin';
             } else {
-                navigate('/app');
+                window.location.href = '/app';
             }
         } else {
             setError(authError || 'Login failed');
@@ -81,15 +81,15 @@ const Login = () => {
                     <button
                         type="submit"
                         disabled={loading}
-                        className="w-full bg-brand-primary text-white font-semibold py-2.5 rounded-lg hover:bg-brand-bright transition-all shadow-lg shadow-brand-primary/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                        className="w-full bg-brand-primary text-white font-semibold py-2.5 rounded-lg hover:bg-brand-bright transition-all shadow-lg shadow-brand-primary/20 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-brand-primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 relative overflow-hidden"
                     >
                         {loading ? <Loader2 className="w-5 h-5 animate-spin" /> : 'Login'}
+                        {!loading && <RippleEffect />}
                     </button>
                 </form>
-
             </div>
         </div>
     );
 };
 
-export default Login;
+export default LoginForm;
